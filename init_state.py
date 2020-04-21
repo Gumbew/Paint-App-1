@@ -12,7 +12,7 @@ def configureFrame(self, master):
     self.pixelList = None
     self.defaultState = 0  # if zero is line can be free, otherwise the line will be straight
     self.fOpenName = None
-
+    self.width = 3
     self.master = master
     self.frame = tkinter.Frame(self.master)
 
@@ -135,11 +135,12 @@ def createIconLayout(self, toolbar, img, nameButton, commandFunction):
 def initDrawToolbar(self):
     self.drawToolbar = tkinter.Frame(self.master, borderwidth=2, relief='raised')
 
-    K1 = IntVar()
+    iv = IntVar()
     L1 = Label(text="Line width:")
     L1.pack()
-    E1 = Entry(textvariable=K1, bd=5, width=3)
-    E1 = Entry(textvariable=K1, bd=5, width=3)
+    iv.trace('w', lambda name, index, mode, iv=iv: change_width(self,iv))
+    E1 = Entry(textvariable=iv, bd=5, width=3, )
+    iv.set(1)
     E1.pack()
 
     createIconLayout(self, self.drawToolbar, self.useMoveTool, 'moveToolBtn', self.transitionTool)
@@ -191,3 +192,7 @@ def initColorToolbar(self):
                      lambda: self.onChangeColor(purple, 'purpleBtn'))
 
     self.colorToolbar.pack(side=BOTTOM, fill=X)
+
+
+def change_width(self, iv):
+    self.width = iv.get()

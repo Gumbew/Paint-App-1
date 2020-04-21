@@ -69,10 +69,10 @@ def curve(p0, p1, p2, color, img):
 
 
 def drawEclipse(centerPoint, x, y, color, img):
-    img.putpixel((centerPoint[0] + x, centerPoint[1] + y), color);
-    img.putpixel((centerPoint[0] - x, centerPoint[1] + y), color);
-    img.putpixel((centerPoint[0] + x, centerPoint[1] - y), color);
-    img.putpixel((centerPoint[0] - x, centerPoint[1] - y), color);
+    img.putpixel((centerPoint[0] + x, centerPoint[1] + y), color)
+    img.putpixel((centerPoint[0] - x, centerPoint[1] + y), color)
+    img.putpixel((centerPoint[0] + x, centerPoint[1] - y), color)
+    img.putpixel((centerPoint[0] - x, centerPoint[1] - y), color)
 
 
 def eclipseMidPoint(centerPoint, rx, ry, color, img):
@@ -98,14 +98,14 @@ def eclipseMidPoint(centerPoint, rx, ry, color, img):
     p = rySq * (x + 0.5) * (x + 0.5) + rxSq * (y - 1) * (y - 1) - rxSq * rySq
     while y > 0:
         y = y - 1
-        py = py - 2 * rxSq;
+        py = py - 2 * rxSq
         if p > 0:
-            p = p + rxSq - py;
+            p = p + rxSq - py
         else:
             x = x + 1
-            px = px + 2 * rySq;
-            p = p + rxSq - py + px;
-        drawEclipse(centerPoint, x, y, color, img);
+            px = px + 2 * rySq
+            p = p + rxSq - py + px
+        drawEclipse(centerPoint, x, y, color, img)
 
     eclipseImg = ImageTk.PhotoImage(img)
     return eclipseImg
@@ -247,23 +247,23 @@ def moveTransition(pixelList, newPoint, bc, img):
     return transitImg
 
 
-def pencil(previousPoint, pointNow, color, img):
+def pencil(previousPoint, pointNow, color, img, width):
     draw = ImageDraw.Draw(img)
-    draw.line((previousPoint, pointNow), color)
+    draw.line((previousPoint, pointNow), color, width=width)
 
     pencilImg = ImageTk.PhotoImage(img)
     return pencilImg
 
 
-def eraser(previousPoint, pointNow, color, img):
+def eraser(previousPoint, pointNow, color, img, width):
     draw = ImageDraw.Draw(img)
-    draw.rectangle([previousPoint, pointNow], fill=color)
+    draw.rectangle([previousPoint, pointNow], fill=color, width=width)
 
     eraserImg = ImageTk.PhotoImage(img)
     return eraserImg
 
 
-def diamond(startPoint, endPoint, color, img, defaultState):
+def diamond(startPoint, endPoint, color, img, defaultState, width):
     a = (endPoint[1] - startPoint[1]) / float(2)
     b = (endPoint[0] - startPoint[0]) / float(2)
 
@@ -274,16 +274,16 @@ def diamond(startPoint, endPoint, color, img, defaultState):
 
     draw = ImageDraw.Draw(img)
 
-    draw.line((A, B), color)
-    draw.line((B, C), color)
-    draw.line((C, D), color)
-    draw.line((D, A), color)
+    draw.line((A, B), color, width)
+    draw.line((B, C), color, width)
+    draw.line((C, D), color, width)
+    draw.line((D, A), color, width)
 
     triangleImg = ImageTk.PhotoImage(img)
     return triangleImg
 
 
-def polygonFive(startPoint, endPoint, color, img, defaultState):
+def polygonFive(startPoint, endPoint, color, img, defaultState, width):
     a = (endPoint[1] - startPoint[1]) / float(2)
     b = (endPoint[0] - startPoint[0]) / float(2)
 
@@ -295,17 +295,17 @@ def polygonFive(startPoint, endPoint, color, img, defaultState):
 
     draw = ImageDraw.Draw(img)
 
-    draw.line((A, B), color)
-    draw.line((B, C), color)
-    draw.line((C, D), color)
-    draw.line((D, E), color)
-    draw.line((E, A), color)
+    draw.line((A, B), color, width)
+    draw.line((B, C), color, width)
+    draw.line((C, D), color, width)
+    draw.line((D, E), color, width)
+    draw.line((E, A), color, width)
 
     triangleImg = ImageTk.PhotoImage(img)
     return triangleImg
 
 
-def polygonSix(startPoint, endPoint, color, img, defaultState):
+def polygonSix(startPoint, endPoint, color, img, defaultState, width):
     a = (endPoint[1] - startPoint[1]) / float(2)
     b = (endPoint[0] - startPoint[0]) / float(2)
 
@@ -318,18 +318,18 @@ def polygonSix(startPoint, endPoint, color, img, defaultState):
 
     draw = ImageDraw.Draw(img)
 
-    draw.line((A, B), color)
-    draw.line((B, C), color)
-    draw.line((C, D), color)
-    draw.line((D, E), color)
-    draw.line((E, F), color)
-    draw.line((F, A), color)
+    draw.line((A, B), color, width)
+    draw.line((B, C), color, width)
+    draw.line((C, D), color, width)
+    draw.line((D, E), color, width)
+    draw.line((E, F), color, width)
+    draw.line((F, A), color, width)
 
     triangleImg = ImageTk.PhotoImage(img)
     return triangleImg
 
 
-def starFour(startPoint, endPoint, color, img, defaultState):
+def starFour(startPoint, endPoint, color, img, defaultState, width):
     a = (endPoint[1] - startPoint[1]) / float(2)
     b = (endPoint[0] - startPoint[0]) / float(2)
 
@@ -344,20 +344,20 @@ def starFour(startPoint, endPoint, color, img, defaultState):
 
     draw = ImageDraw.Draw(img)
 
-    draw.line((A, B), color)
-    draw.line((B, C), color)
-    draw.line((C, D), color)
-    draw.line((D, E), color)
-    draw.line((E, F), color)
-    draw.line((F, G), color)
-    draw.line((G, H), color)
-    draw.line((H, A), color)
+    draw.line((A, B), color, width)
+    draw.line((B, C), color, width)
+    draw.line((C, D), color, width)
+    draw.line((D, E), color, width)
+    draw.line((E, F), color, width)
+    draw.line((F, G), color, width)
+    draw.line((G, H), color, width)
+    draw.line((H, A), color, width)
 
     triangleImg = ImageTk.PhotoImage(img)
     return triangleImg
 
 
-def starSix(startPoint, endPoint, color, img, defaultState):
+def starSix(startPoint, endPoint, color, img, defaultState, width):
     a = (endPoint[1] - startPoint[1]) / float(2)
     b = (endPoint[0] - startPoint[0]) / float(2)
 
@@ -376,24 +376,24 @@ def starSix(startPoint, endPoint, color, img, defaultState):
 
     draw = ImageDraw.Draw(img)
 
-    draw.line((A, B), color)
-    draw.line((B, C), color)
-    draw.line((C, D), color)
-    draw.line((D, E), color)
-    draw.line((E, F), color)
-    draw.line((F, G), color)
-    draw.line((G, H), color)
-    draw.line((H, I), color)
-    draw.line((I, J), color)
-    draw.line((J, K), color)
-    draw.line((K, L), color)
-    draw.line((L, A), color)
+    draw.line((A, B), color, width)
+    draw.line((B, C), color, width)
+    draw.line((C, D), color, width)
+    draw.line((D, E), color, width)
+    draw.line((E, F), color, width)
+    draw.line((F, G), color, width)
+    draw.line((G, H), color, width)
+    draw.line((H, I), color, width)
+    draw.line((I, J), color, width)
+    draw.line((J, K), color, width)
+    draw.line((K, L), color, width)
+    draw.line((L, A), color, width)
 
     triangleImg = ImageTk.PhotoImage(img)
     return triangleImg
 
 
-def triangle(startPoint, endPoint, color, img, defaultState):
+def triangle(startPoint, endPoint, color, img, defaultState, width):
     a = (endPoint[1] - startPoint[1]) / float(2)
     b = (endPoint[0] - startPoint[0]) / float(2)
 
@@ -403,15 +403,15 @@ def triangle(startPoint, endPoint, color, img, defaultState):
 
     draw = ImageDraw.Draw(img)
 
-    draw.line((A, B), color)
-    draw.line((B, C), color)
-    draw.line((C, A), color)
+    draw.line((A, B), color, width)
+    draw.line((B, C), color, width)
+    draw.line((C, A), color, width)
 
     triangleImg = ImageTk.PhotoImage(img)
     return triangleImg
 
 
-def triangleSquare(startPoint, endPoint, color, img, defaultState):
+def triangleSquare(startPoint, endPoint, color, img, defaultState, width):
     a = (endPoint[1] - startPoint[1]) / float(2)
     b = (endPoint[0] - startPoint[0]) / float(2)
 
@@ -421,15 +421,15 @@ def triangleSquare(startPoint, endPoint, color, img, defaultState):
 
     draw = ImageDraw.Draw(img)
 
-    draw.line((A, B), color)
-    draw.line((B, C), color)
-    draw.line((C, A), color)
+    draw.line((A, B), color, width)
+    draw.line((B, C), color, width)
+    draw.line((C, A), color, width)
 
     triangleSquareImg = ImageTk.PhotoImage(img)
     return triangleSquareImg
 
 
-def star(startPoint, endPoint, color, img, defaultState):
+def star(startPoint, endPoint, color, img, defaultState, width):
     a = (endPoint[1] - startPoint[1]) / float(2)
     b = (endPoint[0] - startPoint[0]) / float(2)
 
@@ -447,23 +447,22 @@ def star(startPoint, endPoint, color, img, defaultState):
 
     draw = ImageDraw.Draw(img)
 
-    draw.line((A, A1), color)
-    draw.line((A1, A2), color)
-    draw.line((A2, A3), color)
-    draw.line((A3, A4), color)
-    draw.line((A4, B), color)
-    draw.line((B, B1), color)
-
-    draw.line((A, B4), color)
-    draw.line((B4, B3), color)
-    draw.line((B3, B2), color)
-    draw.line((B1, B2), color)
+    draw.line((A, A1), color, width)
+    draw.line((A1, A2), color, width)
+    draw.line((A2, A3), color, width)
+    draw.line((A3, A4), color, width)
+    draw.line((A4, B), color, width)
+    draw.line((B, B1), color, width)
+    draw.line((A, B4), color, width)
+    draw.line((B4, B3), color, width)
+    draw.line((B3, B2), color, width)
+    draw.line((B1, B2), color, width)
 
     starImg = ImageTk.PhotoImage(img)
     return starImg
 
 
-def arrowRight(startPoint, endPoint, color, img, defaultState):
+def arrowRight(startPoint, endPoint, color, img, defaultState, width):
     a = (endPoint[1] - startPoint[1]) / float(2)
     b = (endPoint[0] - startPoint[0]) / float(2)
 
@@ -479,19 +478,19 @@ def arrowRight(startPoint, endPoint, color, img, defaultState):
 
     draw = ImageDraw.Draw(img)
 
-    draw.line((A1, A2), color)
-    draw.line((A2, A3), color)
-    draw.line((A3, C), color)
-    draw.line((A1, B1), color)
-    draw.line((B1, B2), color)
-    draw.line((B2, B3), color)
-    draw.line((B3, C), color)
+    draw.line((A1, A2), color, width)
+    draw.line((A2, A3), color, width)
+    draw.line((A3, C), color, width)
+    draw.line((A1, B1), color, width)
+    draw.line((B1, B2), color, width)
+    draw.line((B2, B3), color, width)
+    draw.line((B3, C), color, width)
 
     arrowRightImg = ImageTk.PhotoImage(img)
     return arrowRightImg
 
 
-def rectangle(pointA, pointB, color, img, defaultState):
+def rectangle(pointA, pointB, color, img, defaultState, width):
     draw = ImageDraw.Draw(img)
     if defaultState:  # draw square
         edge = abs(pointB[0] - pointA[0])
@@ -499,9 +498,9 @@ def rectangle(pointA, pointB, color, img, defaultState):
             pointB = (pointB[0], edge + pointA[1])
         else:
             pointB = (pointB[0], abs(pointA[1] - edge))
-        draw.rectangle([pointA, pointB], None, color)
+        draw.rectangle([pointA, pointB], None, color, width=width)
     else:
-        draw.rectangle([pointA, pointB], None, color, width=10)
+        draw.rectangle([pointA, pointB], None, color, width=width)
 
     rectangleImg = ImageTk.PhotoImage(img)
     return rectangleImg

@@ -314,7 +314,7 @@ class App(dict):
     def on_button_draw_pencil(self, event):
         previousPoint = (self.x, self.y)
         pointNow = (event.x, event.y)
-        self.pencilImg = draw.pencil(previousPoint, pointNow, self.chooseColor, self.paper)
+        self.pencilImg = draw.pencil(previousPoint, pointNow, self.chooseColor, self.paper, self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.pencilImg)
         self.x = event.x
         self.y = event.y
@@ -322,7 +322,7 @@ class App(dict):
     def on_button_draw_eraser(self, event):
         previousPoint = (self.x, self.y)
         pointNow = (event.x, event.y)
-        self.eraserImg = draw.eraser(previousPoint, pointNow, self.bgColor, self.paper)
+        self.eraserImg = draw.eraser(previousPoint, pointNow, self.bgColor, self.paper, self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.eraserImg)
         self.x = event.x
         self.y = event.y
@@ -332,7 +332,7 @@ class App(dict):
         x1, y1 = (event.x, event.y)
 
         paper = copy.copy(self.paper)
-        self.diamondImg = draw.diamond((x0, y0), (x1, y1), self.chooseColor, paper, self.defaultState)
+        self.diamondImg = draw.diamond((x0, y0), (x1, y1), self.chooseColor, paper, self.defaultState, self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.diamondImg)
         self.defaultState = 0
 
@@ -340,7 +340,7 @@ class App(dict):
         x0, y0 = (self.x, self.y)
         x1, y1 = (event.x, event.y)
 
-        self.diamondImg = draw.diamond((x0, y0), (x1, y1), self.chooseColor, self.paper, self.defaultState)
+        self.diamondImg = draw.diamond((x0, y0), (x1, y1), self.chooseColor, self.paper, self.defaultState, self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.diamondImg)
         self.defaultState = 0
 
@@ -349,7 +349,7 @@ class App(dict):
         x1, y1 = (event.x, event.y)
 
         paper = copy.copy(self.paper)
-        self.starFourImg = draw.starFour((x0, y0), (x1, y1), self.chooseColor, paper, self.defaultState)
+        self.starFourImg = draw.starFour((x0, y0), (x1, y1), self.chooseColor, paper, self.defaultState, self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.starFourImg)
         self.defaultState = 0
 
@@ -357,7 +357,8 @@ class App(dict):
         x0, y0 = (self.x, self.y)
         x1, y1 = (event.x, event.y)
 
-        self.starFourImg = draw.starFour((x0, y0), (x1, y1), self.chooseColor, self.paper, self.defaultState)
+        self.starFourImg = draw.starFour((x0, y0), (x1, y1), self.chooseColor, self.paper, self.defaultState,
+                                         self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.starFourImg)
         self.defaultState = 0
 
@@ -366,7 +367,7 @@ class App(dict):
         x1, y1 = (event.x, event.y)
 
         paper = copy.copy(self.paper)
-        self.starSixImg = draw.starSix((x0, y0), (x1, y1), self.chooseColor, paper, self.defaultState)
+        self.starSixImg = draw.starSix((x0, y0), (x1, y1), self.chooseColor, paper, self.defaultState, self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.starSixImg)
         self.defaultState = 0
 
@@ -374,7 +375,7 @@ class App(dict):
         x0, y0 = (self.x, self.y)
         x1, y1 = (event.x, event.y)
 
-        self.starSixImg = draw.starSix((x0, y0), (x1, y1), self.chooseColor, self.paper, self.defaultState)
+        self.starSixImg = draw.starSix((x0, y0), (x1, y1), self.chooseColor, self.paper, self.defaultState, self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.starSixImg)
         self.defaultState = 0
 
@@ -383,7 +384,8 @@ class App(dict):
         x1, y1 = (event.x, event.y)
 
         paper = copy.copy(self.paper)
-        self.polygonFiveImg = draw.polygonFive((x0, y0), (x1, y1), self.chooseColor, paper, self.defaultState)
+        self.polygonFiveImg = draw.polygonFive((x0, y0), (x1, y1), self.chooseColor, paper, self.defaultState,
+                                               self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.polygonFiveImg)
         self.defaultState = 0
 
@@ -391,7 +393,8 @@ class App(dict):
         x0, y0 = (self.x, self.y)
         x1, y1 = (event.x, event.y)
 
-        self.polygonFiveImg = draw.polygonFive((x0, y0), (x1, y1), self.chooseColor, self.paper, self.defaultState)
+        self.polygonFiveImg = draw.polygonFive((x0, y0), (x1, y1), self.chooseColor, self.paper, self.defaultState,
+                                               self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.polygonFiveImg)
         self.defaultState = 0
 
@@ -400,7 +403,7 @@ class App(dict):
         x1, y1 = (event.x, event.y)
 
         paper = copy.copy(self.paper)
-        self.polygonSixImg = draw.polygonSix((x0, y0), (x1, y1), self.chooseColor, paper, self.defaultState)
+        self.polygonSixImg = draw.polygonSix((x0, y0), (x1, y1), self.chooseColor, paper, self.defaultState, self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.polygonSixImg)
         self.defaultState = 0
 
@@ -408,7 +411,8 @@ class App(dict):
         x0, y0 = (self.x, self.y)
         x1, y1 = (event.x, event.y)
 
-        self.polygonSixImg = draw.polygonSix((x0, y0), (x1, y1), self.chooseColor, self.paper, self.defaultState)
+        self.polygonSixImg = draw.polygonSix((x0, y0), (x1, y1), self.chooseColor, self.paper, self.defaultState,
+                                             self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.polygonSixImg)
         self.defaultState = 0
 
@@ -417,7 +421,7 @@ class App(dict):
         x1, y1 = (event.x, event.y)
 
         paper = copy.copy(self.paper)
-        self.triangleImg = draw.triangle((x0, y0), (x1, y1), self.chooseColor, paper, self.defaultState)
+        self.triangleImg = draw.triangle((x0, y0), (x1, y1), self.chooseColor, paper, self.defaultState, self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.triangleImg)
         self.defaultState = 0
 
@@ -425,7 +429,8 @@ class App(dict):
         x0, y0 = (self.x, self.y)
         x1, y1 = (event.x, event.y)
 
-        self.triangleImg = draw.triangle((x0, y0), (x1, y1), self.chooseColor, self.paper, self.defaultState)
+        self.triangleImg = draw.triangle((x0, y0), (x1, y1), self.chooseColor, self.paper, self.defaultState,
+                                         self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.triangleImg)
         self.defaultState = 0
 
@@ -434,7 +439,8 @@ class App(dict):
         x1, y1 = (event.x, event.y)
 
         paper = copy.copy(self.paper)
-        self.triangleSquareImg = draw.triangleSquare((x0, y0), (x1, y1), self.chooseColor, paper, self.defaultState)
+        self.triangleSquareImg = draw.triangleSquare((x0, y0), (x1, y1), self.chooseColor, paper, self.defaultState,
+                                                     self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.triangleSquareImg)
         self.defaultState = 0
 
@@ -443,7 +449,7 @@ class App(dict):
         x1, y1 = (event.x, event.y)
 
         self.triangleSquareImg = draw.triangleSquare((x0, y0), (x1, y1), self.chooseColor, self.paper,
-                                                     self.defaultState)
+                                                     self.defaultState, self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.triangleSquareImg)
         self.defaultState = 0
 
@@ -452,7 +458,7 @@ class App(dict):
         x1, y1 = (event.x, event.y)
 
         paper = copy.copy(self.paper)
-        self.starImg = draw.star((x0, y0), (x1, y1), self.chooseColor, paper, self.defaultState)
+        self.starImg = draw.star((x0, y0), (x1, y1), self.chooseColor, paper, self.defaultState, self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.starImg)
         self.defaultState = 0
 
@@ -460,7 +466,7 @@ class App(dict):
         x0, y0 = (self.x, self.y)
         x1, y1 = (event.x, event.y)
 
-        self.starImg = draw.star((x0, y0), (x1, y1), self.chooseColor, self.paper, self.defaultState)
+        self.starImg = draw.star((x0, y0), (x1, y1), self.chooseColor, self.paper, self.defaultState, self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.starImg)
         self.defaultState = 0
 
@@ -469,7 +475,7 @@ class App(dict):
         x1, y1 = (event.x, event.y)
 
         paper = copy.copy(self.paper)
-        self.arrowRightImg = draw.arrowRight((x0, y0), (x1, y1), self.chooseColor, paper, self.defaultState)
+        self.arrowRightImg = draw.arrowRight((x0, y0), (x1, y1), self.chooseColor, paper, self.defaultState, self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.arrowRightImg)
         self.defaultState = 0
 
@@ -477,16 +483,15 @@ class App(dict):
         x0, y0 = (self.x, self.y)
         x1, y1 = (event.x, event.y)
 
-        self.arrowRightImg = draw.arrowRight((x0, y0), (x1, y1), self.chooseColor, self.paper, self.defaultState)
+        self.arrowRightImg = draw.arrowRight((x0, y0), (x1, y1), self.chooseColor, self.paper, self.defaultState, self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.arrowRightImg)
         self.defaultState = 0
 
     def on_button_choosing_place_motion(self, event):
         x0, y0 = (self.x, self.y)
         x1, y1 = (event.x, event.y)
-
         paper = copy.copy(self.paper)
-        self.rectangleImg = draw.rectangle((x0, y0), (x1, y1), dark, paper, self.defaultState)
+        self.rectangleImg = draw.rectangle((x0, y0), (x1, y1), dark, paper, self.defaultState, self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.rectangleImg)
 
         self.defaultState = 0
@@ -717,7 +722,7 @@ class App(dict):
         x1, y1 = (event.x, event.y)
 
         paper = copy.copy(self.paper)
-        self.rectangleImg = draw.rectangle((x0, y0), (x1, y1), self.chooseColor, paper, self.defaultState)
+        self.rectangleImg = draw.rectangle((x0, y0), (x1, y1), self.chooseColor, paper, self.defaultState, self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.rectangleImg)
         self.defaultState = 0
 
@@ -725,7 +730,8 @@ class App(dict):
         x0, y0 = (self.x, self.y)
         x1, y1 = (event.x, event.y)
 
-        self.rectangleImg = draw.rectangle((x0, y0), (x1, y1), self.chooseColor, self.paper, self.defaultState)
+        self.rectangleImg = draw.rectangle((x0, y0), (x1, y1), self.chooseColor, self.paper, self.defaultState,
+                                           self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.rectangleImg)
         self.defaultState = 0
 
