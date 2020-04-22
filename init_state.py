@@ -15,6 +15,7 @@ def configureFrame(self, master):
     self.width = 3
     self.master = master
     self.frame = tkinter.Frame(self.master)
+    self.figures=[]
 
 
 def initFrame(self):

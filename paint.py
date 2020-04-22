@@ -421,16 +421,19 @@ class App(dict):
         x1, y1 = (event.x, event.y)
 
         paper = copy.copy(self.paper)
-        self.triangleImg = draw.triangle((x0, y0), (x1, y1), self.chooseColor, paper, self.defaultState, self.width)
+        self.triangleImg = draw.triangle((x0, y0), (x1, y1), self.chooseColor, paper, self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.triangleImg)
         self.defaultState = 0
 
     def on_button_release_triangle(self, event):
         x0, y0 = (self.x, self.y)
         x1, y1 = (event.x, event.y)
+        print(self.paper)
+        print(self.triangleImg)
+        self.triangleImg = draw.triangle((x0, y0), (x1, y1), self.chooseColor, self.paper, self.width)
 
-        self.triangleImg = draw.triangle((x0, y0), (x1, y1), self.chooseColor, self.paper, self.defaultState,
-                                         self.width)
+        print(self.paper)
+        print(self.triangleImg)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.triangleImg)
         self.defaultState = 0
 
@@ -447,9 +450,12 @@ class App(dict):
     def on_button_release_triangle_square(self, event):
         x0, y0 = (self.x, self.y)
         x1, y1 = (event.x, event.y)
-
+        print(self.paper)
+        print(self.triangleSquareImg)
         self.triangleSquareImg = draw.triangleSquare((x0, y0), (x1, y1), self.chooseColor, self.paper,
                                                      self.defaultState, self.width)
+        print(self.paper)
+        print(self.triangleSquareImg)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.triangleSquareImg)
         self.defaultState = 0
 
@@ -483,7 +489,8 @@ class App(dict):
         x0, y0 = (self.x, self.y)
         x1, y1 = (event.x, event.y)
 
-        self.arrowRightImg = draw.arrowRight((x0, y0), (x1, y1), self.chooseColor, self.paper, self.defaultState, self.width)
+        self.arrowRightImg = draw.arrowRight((x0, y0), (x1, y1), self.chooseColor, self.paper, self.defaultState,
+                                             self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.arrowRightImg)
         self.defaultState = 0
 
@@ -742,13 +749,23 @@ class App(dict):
 
         paper = copy.copy(self.paper)
         rx = x1 - x0
+        ry = y1 - y0
+
+        if rx > ry:
+            r = rx
+        else:
+            r = ry
+
+        x = x0
+        y = y0
 
         if self.defaultState == 1:
-            ry = rx
-        else:
-            ry = y1 - y0
+            x0 = x - r
+            y0 = y - r
+            x1 = x + r
+            y1 = y + r
 
-        self.circleImg = draw.eclipseMidPoint((x0, y0), rx, ry, self.chooseColor, paper)
+        self.circleImg = draw.ellipse([(x0, y0), (x1, y1)], self.chooseColor, paper, self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.circleImg)
         self.defaultState = 0
 
@@ -758,13 +775,22 @@ class App(dict):
         x1, y1 = (event.x, event.y)
 
         rx = x1 - x0
+        ry = y1 - y0
+        if rx > ry:
+            r = rx
+        else:
+            r = ry
+
+        x = x0
+        y = y0
 
         if self.defaultState == 1:
-            ry = rx
-        else:
-            ry = y1 - y0
+            x0 = x - r
+            y0 = y - r
+            x1 = x + r
+            y1 = y + r
 
-        self.circleImg = draw.eclipseMidPoint((x0, y0), rx, ry, self.chooseColor, self.paper)
+        self.circleImg = draw.ellipse([(x0, y0), (x1, y1)], self.chooseColor, self.paper, self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.circleImg)
         self.defaultState = 0
 

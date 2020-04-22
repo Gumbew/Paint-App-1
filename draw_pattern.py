@@ -1,5 +1,7 @@
 import math
 from PIL import Image, ImageTk, ImageDraw
+import cv2
+import numpy as np
 
 
 class Point:
@@ -68,47 +70,11 @@ def curve(p0, p1, p2, color, img):
     return curveImg
 
 
-def drawEclipse(centerPoint, x, y, color, img):
-    img.putpixel((centerPoint[0] + x, centerPoint[1] + y), color)
-    img.putpixel((centerPoint[0] - x, centerPoint[1] + y), color)
-    img.putpixel((centerPoint[0] + x, centerPoint[1] - y), color)
-    img.putpixel((centerPoint[0] - x, centerPoint[1] - y), color)
-
-
-def eclipseMidPoint(centerPoint, rx, ry, color, img):
-    rxSq = rx ** 2
-    rySq = ry ** 2
-    x = 0
-    y = ry
-    px = 0
-    py = 2 * rxSq * y
-    drawEclipse(centerPoint, x, y, color, img)
-    p = rySq - (rxSq * ry) + (0.25 * rxSq)
-    while px < py:
-        x = x + 1
-        px = px + 2 * rySq
-        if p < 0:
-            p = p + rySq + px
-        else:
-            y = y - 1
-            py = py - 2 * rxSq
-            p = p + rySq + px - py
-        drawEclipse(centerPoint, x, y, color, img)
-
-    p = rySq * (x + 0.5) * (x + 0.5) + rxSq * (y - 1) * (y - 1) - rxSq * rySq
-    while y > 0:
-        y = y - 1
-        py = py - 2 * rxSq
-        if p > 0:
-            p = p + rxSq - py
-        else:
-            x = x + 1
-            px = px + 2 * rySq
-            p = p + rxSq - py + px
-        drawEclipse(centerPoint, x, y, color, img)
-
-    eclipseImg = ImageTk.PhotoImage(img)
-    return eclipseImg
+def ellipse(points, color, img, width):
+    draw = ImageDraw.Draw(img)
+    draw.ellipse(points, outline=color, width=width)
+    ellipseImg = ImageTk.PhotoImage(img)
+    return ellipseImg
 
 
 def flipHorizontal(startPoint, endPoint, center, bc, img):
@@ -273,11 +239,10 @@ def diamond(startPoint, endPoint, color, img, defaultState, width):
     D = (int(startPoint[0] + 2 * b), int(startPoint[1] + a))
 
     draw = ImageDraw.Draw(img)
+    points = (A, B, C, D, A)
 
-    draw.line((A, B), color, width)
-    draw.line((B, C), color, width)
-    draw.line((C, D), color, width)
-    draw.line((D, A), color, width)
+    draw.line(points, color, width)
+    smooth_corners(points, draw, width, color, n=2.3)
 
     triangleImg = ImageTk.PhotoImage(img)
     return triangleImg
@@ -294,12 +259,9 @@ def polygonFive(startPoint, endPoint, color, img, defaultState, width):
     E = (int(startPoint[0] + 2 * b), int(startPoint[1] + a))
 
     draw = ImageDraw.Draw(img)
-
-    draw.line((A, B), color, width)
-    draw.line((B, C), color, width)
-    draw.line((C, D), color, width)
-    draw.line((D, E), color, width)
-    draw.line((E, A), color, width)
+    points = (A, B, C, D, E, A)
+    draw.line(points, color, width)
+    smooth_corners(points, draw, width, color, n=2.3)
 
     triangleImg = ImageTk.PhotoImage(img)
     return triangleImg
@@ -317,13 +279,9 @@ def polygonSix(startPoint, endPoint, color, img, defaultState, width):
     F = (int(startPoint[0] + 2 * b), int(startPoint[1] + a / 2))
 
     draw = ImageDraw.Draw(img)
-
-    draw.line((A, B), color, width)
-    draw.line((B, C), color, width)
-    draw.line((C, D), color, width)
-    draw.line((D, E), color, width)
-    draw.line((E, F), color, width)
-    draw.line((F, A), color, width)
+    points = (A, B, C, D, E, F, A)
+    draw.line(points, color, width)
+    smooth_corners(points, draw, width, color, n=2.3)
 
     triangleImg = ImageTk.PhotoImage(img)
     return triangleImg
@@ -343,15 +301,9 @@ def starFour(startPoint, endPoint, color, img, defaultState, width):
     H = (int(startPoint[0] + 1.25 * b), int(startPoint[1] + 3 * a / 4))
 
     draw = ImageDraw.Draw(img)
-
-    draw.line((A, B), color, width)
-    draw.line((B, C), color, width)
-    draw.line((C, D), color, width)
-    draw.line((D, E), color, width)
-    draw.line((E, F), color, width)
-    draw.line((F, G), color, width)
-    draw.line((G, H), color, width)
-    draw.line((H, A), color, width)
+    points = (A, B, C, D, E, F, G, H, A)
+    draw.line(points, color, width)
+    smooth_corners(points, draw, width, color, n=2.3)
 
     triangleImg = ImageTk.PhotoImage(img)
     return triangleImg
@@ -375,57 +327,51 @@ def starSix(startPoint, endPoint, color, img, defaultState, width):
     L = (int(startPoint[0] + 1.25 * b), int(startPoint[1] + a / 2))
 
     draw = ImageDraw.Draw(img)
-
-    draw.line((A, B), color, width)
-    draw.line((B, C), color, width)
-    draw.line((C, D), color, width)
-    draw.line((D, E), color, width)
-    draw.line((E, F), color, width)
-    draw.line((F, G), color, width)
-    draw.line((G, H), color, width)
-    draw.line((H, I), color, width)
-    draw.line((I, J), color, width)
-    draw.line((J, K), color, width)
-    draw.line((K, L), color, width)
-    draw.line((L, A), color, width)
+    points = (A, B, C, D, E, F, G, H, I, J, K, L, A)
+    draw.line(points, color, width)
+    smooth_corners(points, draw, width, color, n=2.3)
 
     triangleImg = ImageTk.PhotoImage(img)
     return triangleImg
 
 
-def triangle(startPoint, endPoint, color, img, defaultState, width):
-    a = (endPoint[1] - startPoint[1]) / float(2)
+def triangle(startPoint, endPoint, color, img, width):
     b = (endPoint[0] - startPoint[0]) / float(2)
 
     A = (int(startPoint[0]), int(endPoint[1]))
     B = (int(endPoint[0]), int(endPoint[1]))
     C = (int(startPoint[0] + b), int(startPoint[1]))
 
+    points = (A, B, C, A)
     draw = ImageDraw.Draw(img)
 
-    draw.line((A, B), color, width)
-    draw.line((B, C), color, width)
-    draw.line((C, A), color, width)
+    draw.line(points, color, width)
+    smooth_corners(points, draw, width, color)
+
+    # triangle = np.array([A, B, C], np.int32)
+    # numpy_image = np.array(img)
+    # opencv_image = cv2.cvtColor(numpy_image, cv2.COLOR_RGB2BGR)
+    # cv2.polylines(opencv_image, [triangle], True, color[::-1], width)
+    # opencv_image_RGB = cv2.cvtColor(opencv_image, cv2.COLOR_BGR2RGB)
+    # im_pil = Image.fromarray(opencv_image_RGB)
+    # triangleImg = ImageTk.PhotoImage(im_pil)
 
     triangleImg = ImageTk.PhotoImage(img)
     return triangleImg
 
 
 def triangleSquare(startPoint, endPoint, color, img, defaultState, width):
-    a = (endPoint[1] - startPoint[1]) / float(2)
-    b = (endPoint[0] - startPoint[0]) / float(2)
-
     A = (int(startPoint[0]), int(startPoint[1]))
     B = (int(startPoint[0]), int(endPoint[1]))
     C = (int(endPoint[0]), int(endPoint[1]))
 
+    points = (A, B, C, A)
     draw = ImageDraw.Draw(img)
 
-    draw.line((A, B), color, width)
-    draw.line((B, C), color, width)
-    draw.line((C, A), color, width)
-
+    draw.line(points, color, width)
+    smooth_corners(points, draw, width, color)
     triangleSquareImg = ImageTk.PhotoImage(img)
+
     return triangleSquareImg
 
 
@@ -446,18 +392,9 @@ def star(startPoint, endPoint, color, img, defaultState, width):
     B4 = (int(startPoint[0] + 1.25 * b), int(3 * a / 4 + startPoint[1]))
 
     draw = ImageDraw.Draw(img)
-
-    draw.line((A, A1), color, width)
-    draw.line((A1, A2), color, width)
-    draw.line((A2, A3), color, width)
-    draw.line((A3, A4), color, width)
-    draw.line((A4, B), color, width)
-    draw.line((B, B1), color, width)
-    draw.line((A, B4), color, width)
-    draw.line((B4, B3), color, width)
-    draw.line((B3, B2), color, width)
-    draw.line((B1, B2), color, width)
-
+    points = (A, A1, A2, A3, A4, B, B1, B2, B3, B4, A)
+    draw.line(points, color, width)
+    smooth_corners(points, draw, width, color, n=2.3)
     starImg = ImageTk.PhotoImage(img)
     return starImg
 
@@ -477,15 +414,10 @@ def arrowRight(startPoint, endPoint, color, img, defaultState, width):
     C = (int(startPoint[0] + 2 * b), int(a + startPoint[1]))
 
     draw = ImageDraw.Draw(img)
+    points = (A1, A2, A3, C, B3, B2, B1, A1)
+    draw.line(points, color, width)
 
-    draw.line((A1, A2), color, width)
-    draw.line((A2, A3), color, width)
-    draw.line((A3, C), color, width)
-    draw.line((A1, B1), color, width)
-    draw.line((B1, B2), color, width)
-    draw.line((B2, B3), color, width)
-    draw.line((B3, C), color, width)
-
+    smooth_corners(points, draw, width, color)
     arrowRightImg = ImageTk.PhotoImage(img)
     return arrowRightImg
 
@@ -587,58 +519,6 @@ def lineDDA(startPoint, endPoint, color, img, defaultState):
     return lineImg
 
 
-def generateSymmetricPixel(point, centerPoint):
-    x = point.x
-    y = point.y
-    return [
-        Point(centerPoint.x + x, centerPoint.y + y),
-        Point(centerPoint.x - x, centerPoint.y - y),
-        Point(centerPoint.x + x, centerPoint.y - y),
-        Point(centerPoint.x - x, centerPoint.y + y)
-    ]
-
-
-def generateCirclePixel(arrayPixel, centerPoint):
-    list = []
-    for i in arrayPixel:
-        list.append(generateSymmetricPixel(
-            Point(i.x, i.y),
-            centerPoint
-        ))
-        list.append(generateSymmetricPixel(
-            Point(i.y, i.x),
-            centerPoint
-        ))
-    return list
-
-
-def circleMidPoint(centerPoint, radius, color, circle):
-    print('radius ', radius)
-
-    arrayPixel = []
-    x = 0
-    y = radius
-    f = 1 - radius
-    while (x <= y):
-        arrayPixel.append(Point(x, y))
-        if (f < 0):
-            f = f + 2 * x + 3
-        #            y = y - 1  # fractal
-        else:
-            y = y - 1  # circle
-            f = f + 2 * (x - y) + 5
-        x = x + 1
-
-    list = generateCirclePixel(arrayPixel, centerPoint)
-
-    for obj in list:
-        for j in obj:
-            circle.putpixel((j.x, j.y), color)
-
-    circleImg = ImageTk.PhotoImage(circle)
-    return circleImg
-
-
 def fillColor(img, center, bc, newColor, paperWidth, paperHeight):
     print('center ', center)
 
@@ -664,3 +544,9 @@ def fillColor(img, center, bc, newColor, paperWidth, paperHeight):
 
     filledImg = ImageTk.PhotoImage(img)
     return filledImg
+
+
+def smooth_corners(corners, draw, width, color, n=2):
+    for corner in corners:
+        draw.ellipse((corner[0] - width / n, corner[1] - width / n, corner[0] + width / n, corner[1] + width / n),
+                     color)
