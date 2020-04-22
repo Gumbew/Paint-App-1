@@ -822,7 +822,8 @@ class App(dict):
         x1, y1 = (event.x, event.y)
 
         paper = copy.copy(self.paper)
-        self.lineImg = draw.lineDDA(draw.Point(x0, y0), draw.Point(x1, y1), self.chooseColor, paper, self.defaultState)
+        #self.lineImg = draw.lineDDA(draw.Point(x0, y0), draw.Point(x1, y1), self.chooseColor, paper, self.defaultState)
+        self.lineImg = draw.line(draw.Point(x0, y0), draw.Point(x1, y1),self.chooseColor, paper, self.defaultState, self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.lineImg)
         self.defaultState = 0
 
@@ -830,8 +831,10 @@ class App(dict):
         x0, y0 = (self.x, self.y)
         x1, y1 = (event.x, event.y)
 
-        self.lineImg = draw.lineDDA(draw.Point(x0, y0), draw.Point(x1, y1), self.chooseColor, self.paper,
-                                    self.defaultState)
+        # self.lineImg = draw.lineDDA(draw.Point(x0, y0), draw.Point(x1, y1), self.chooseColor, self.paper,
+        #                             self.defaultState)
+        self.lineImg = draw.line(draw.Point(x0, y0), draw.Point(x1, y1), self.chooseColor, self.paper, self.defaultState,
+                                 self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.lineImg)
         self.defaultState = 0
 

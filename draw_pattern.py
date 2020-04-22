@@ -438,83 +438,19 @@ def rectangle(pointA, pointB, color, img, defaultState, width):
     return rectangleImg
 
 
-def lineDDA(startPoint, endPoint, color, img, defaultState):
+def line(startPoint, endPoint, color, img, defaultState, width):
+    draw = ImageDraw.Draw(img)
+
     dx = endPoint.x - startPoint.x
     dy = endPoint.y - startPoint.y
 
     if defaultState == 1:
         if abs(dx) > abs(dy):
-            dy = 0
+            endPoint.y = startPoint.y
         else:
-            dx = 0
+            endPoint.x = startPoint.x
 
-    if dx == 0:
-        if dy > 0:
-            delta = 1
-        else:
-            delta = -1
-        x = startPoint.x
-        y = startPoint.y
-        while y != endPoint.y:
-            img.putpixel((x, y), color)
-            y = y + delta
-
-    elif dy == 0:
-        if dx > 0:
-            delta = 1
-        else:
-            delta = -1
-        x = startPoint.x
-        y = startPoint.y
-        while x != endPoint.x:
-            img.putpixel((x, y), color)
-            x = x + delta
-
-    else:
-        if abs(dx) > abs(dy):
-            m = dy / float(dx)
-            if m > 0:
-                if startPoint.x > endPoint.x:
-                    startPoint.x, endPoint.x = endPoint.x, startPoint.x
-
-                if startPoint.y > endPoint.y:
-                    startPoint.y, endPoint.y = endPoint.y, startPoint.y
-            else:
-                if startPoint.x > endPoint.x:
-                    startPoint.x, endPoint.x = endPoint.x, startPoint.x
-
-                if startPoint.y < endPoint.y:
-                    startPoint.y, endPoint.y = endPoint.y, startPoint.y
-
-            x = startPoint.x
-            y = startPoint.y
-            while x <= endPoint.x:
-                img.putpixel((x, int(round(y))), color)
-                y = y + m
-                x = x + 1
-
-        else:
-            m = dx / float(dy)
-            if m > 0:
-                if startPoint.x > endPoint.x:
-                    startPoint.x, endPoint.x = endPoint.x, startPoint.x
-
-                if startPoint.y > endPoint.y:
-                    startPoint.y, endPoint.y = endPoint.y, startPoint.y
-            else:
-                if startPoint.x < endPoint.x:
-                    startPoint.x, endPoint.x = endPoint.x, startPoint.x
-
-                if startPoint.y > endPoint.y:
-                    startPoint.y, endPoint.y = endPoint.y, startPoint.y
-
-            x = startPoint.x
-            y = startPoint.y
-            while y <= endPoint.y:
-                img.putpixel((int(round(x)), y), color)
-                x = x + m
-                y = y + 1
-
+    draw.line([(startPoint.x, startPoint.y), (endPoint.x, endPoint.y)], color, width)
     lineImg = ImageTk.PhotoImage(img)
     return lineImg
 
