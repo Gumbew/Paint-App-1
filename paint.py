@@ -157,18 +157,6 @@ class App(dict):
         self.myCanvas.bind("<B1-Motion>", self.on_button_draw_eraser)
         self.myCanvas.bind("<ButtonRelease-1>", self.on_button_draw_eraser)
 
-    def drawCurveTool(self):
-        self.active_button.config(relief=RAISED)
-        self.active_button = self.curveBtn
-        self.active_button.config(relief=SUNKEN)
-        self.myCanvas.config(cursor="crosshair")
-        self.p0 = self.p1 = self.p2 = None
-        self.listChosenPoint = []
-        self.myCanvas.bind("<ButtonPress-1>", self.addChosenPoint)
-        #    if len(self.listChosenPoint) >= 2:
-        self.myCanvas.bind("<B1-Motion>", self.on_button_curve_motion)
-        self.myCanvas.bind("<ButtonRelease-1>", self.on_button_release_curve)
-
     def addChosenPoint(self, event):
         print(event.x, event.y)
         self.listChosenPoint.append((event.x, event.y))
@@ -428,12 +416,7 @@ class App(dict):
     def on_button_release_triangle(self, event):
         x0, y0 = (self.x, self.y)
         x1, y1 = (event.x, event.y)
-        print(self.paper)
-        print(self.triangleImg)
         self.triangleImg = draw.triangle((x0, y0), (x1, y1), self.chooseColor, self.paper, self.width)
-
-        print(self.paper)
-        print(self.triangleImg)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.triangleImg)
         self.defaultState = 0
 
@@ -450,12 +433,8 @@ class App(dict):
     def on_button_release_triangle_square(self, event):
         x0, y0 = (self.x, self.y)
         x1, y1 = (event.x, event.y)
-        print(self.paper)
-        print(self.triangleSquareImg)
         self.triangleSquareImg = draw.triangleSquare((x0, y0), (x1, y1), self.chooseColor, self.paper,
                                                      self.defaultState, self.width)
-        print(self.paper)
-        print(self.triangleSquareImg)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.triangleSquareImg)
         self.defaultState = 0
 
@@ -798,32 +777,14 @@ class App(dict):
         self.x = event.x
         self.y = event.y
 
-    def on_button_curve_motion(self, event):
-        self.p1 = (event.x, event.y)
-
-        paper = copy.copy(self.paper)
-        self.curveImg = draw.curve(self.listChosenPoint[0], self.p1, self.listChosenPoint[1], self.chooseColor, paper)
-        self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.curveImg)
-
-        self.defaultState = 0
-
-    def on_button_release_curve(self, event):
-        self.p1 = (event.x, event.y)
-
-        self.curveImg = draw.curve(self.listChosenPoint[0], self.p1, self.listChosenPoint[1], self.chooseColor,
-                                   self.paper)
-        self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.curveImg)
-
-        self.defaultState = 0
-        self.listChosenPoint = []
-
     def on_button_release_line_motion(self, event):
         x0, y0 = (self.x, self.y)
         x1, y1 = (event.x, event.y)
 
         paper = copy.copy(self.paper)
-        #self.lineImg = draw.lineDDA(draw.Point(x0, y0), draw.Point(x1, y1), self.chooseColor, paper, self.defaultState)
-        self.lineImg = draw.line(draw.Point(x0, y0), draw.Point(x1, y1),self.chooseColor, paper, self.defaultState, self.width)
+        # self.lineImg = draw.lineDDA(draw.Point(x0, y0), draw.Point(x1, y1), self.chooseColor, paper, self.defaultState)
+        self.lineImg = draw.line(draw.Point(x0, y0), draw.Point(x1, y1), self.chooseColor, paper, self.defaultState,
+                                 self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.lineImg)
         self.defaultState = 0
 
@@ -833,7 +794,8 @@ class App(dict):
 
         # self.lineImg = draw.lineDDA(draw.Point(x0, y0), draw.Point(x1, y1), self.chooseColor, self.paper,
         #                             self.defaultState)
-        self.lineImg = draw.line(draw.Point(x0, y0), draw.Point(x1, y1), self.chooseColor, self.paper, self.defaultState,
+        self.lineImg = draw.line(draw.Point(x0, y0), draw.Point(x1, y1), self.chooseColor, self.paper,
+                                 self.defaultState,
                                  self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.lineImg)
         self.defaultState = 0

@@ -31,7 +31,6 @@ rotateIconPic = './pic/rotate.png'
 scaleIconPic = './pic/scale.png'
 flipVerticalIconPic = './pic/flip-vertical.png'
 flipHorizontalIconPic = './pic/flip-horizontal.png'
-curveIconPic = './pic/curve.png'
 eraserIconPic = './pic/eraser_1.png'
 shearIconPic = './pic/shear.png'
 
@@ -78,10 +77,6 @@ buttonDescription = {
   "lineToolBtn": {
     "title": 'Line',
     "desc": 'Choosing a point, then move the mouse. Hold SHIFT to draw vertical or horizontal line'
-  },
-  "curveBtn": {
-    "title": 'Curve',
-    "desc": 'Choosing two point, then move the mouse'
   },
   "circleBtn": {
     "title": 'Eclipse',

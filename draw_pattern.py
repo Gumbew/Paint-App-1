@@ -59,17 +59,6 @@ def scalling(pixelList, center, scale, img):
     return scaleImg
 
 
-def curve(p0, p1, p2, color, img):
-    t = 0
-    while t < 1:
-        x = int(p0[0] * (1 - t) ** 2 + 2 * (1 - t) * t * p1[0] + p2[0] * t ** 2)
-        y = int(p0[1] * (1 - t) ** 2 + 2 * (1 - t) * t * p1[1] + p2[1] * t ** 2)
-        img.putpixel((x, y), color)
-        t = t + 0.001
-    curveImg = ImageTk.PhotoImage(img)
-    return curveImg
-
-
 def ellipse(points, color, img, width):
     draw = ImageDraw.Draw(img)
     draw.ellipse(points, outline=color, width=width)

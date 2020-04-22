@@ -77,7 +77,6 @@ def initIconToolbar(self):
     createIconImage(self, 'fill', 'useFill', fillIconPic, (30, 30))
     createIconImage(self, 'lineTool', 'useLineTool', lineIconPic, (30, 30))
     createIconImage(self, 'arrowRight', 'useArrowRight', arrowRightIconPic, (30, 30))
-    createIconImage(self, 'curve', 'useCurve', curveIconPic, (30, 30))
     createIconImage(self, 'eraser', 'useEraser', eraserIconPic, (30, 30))
 
     self.paper = Image.new("RGB", (self.paperWidth, self.paperHeight), self.bgColor)
@@ -154,7 +153,6 @@ def initDrawToolbar(self):
     createIconLayout(self, self.drawToolbar, self.usePencil, 'pencilBtn', self.drawPencilTool)
     createIconLayout(self, self.drawToolbar, self.useEraser, 'eraserBtn', self.eraserTool)
     createIconLayout(self, self.drawToolbar, self.useLineTool, 'lineToolBtn', self.drawLineTool)
-    createIconLayout(self, self.drawToolbar, self.useCurve, 'curveBtn', self.drawCurveTool)
     createIconLayout(self, self.drawToolbar, self.useCircle, 'circleBtn', self.drawCircleTool)
     createIconLayout(self, self.drawToolbar, self.useRectangle, 'rectangleBtn', self.drawRectangleTool)
     createIconLayout(self, self.drawToolbar, self.useDiamond, 'diamondBtn', self.drawDiamondTool)
