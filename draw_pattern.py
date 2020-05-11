@@ -1,7 +1,7 @@
 import math
-from PIL import Image, ImageTk, ImageDraw
+from PIL import ImageTk, ImageDraw
 import cv2
-import numpy as np
+
 
 
 class Point:
@@ -87,7 +87,6 @@ def flipHorizontal(startPoint, endPoint, center, bc, img):
                 pixelList.append(pixelObj)
                 img.putpixel((i, j), bc)
 
-                # render new pattern based on coordinate of newPoint
     for i in range(0, len(pixelList) - 1):
         pixel = pixelList[i]
         x = pixel[0][0]
@@ -119,7 +118,6 @@ def flipVertical(startPoint, endPoint, center, bc, img):
                 pixelList.append(pixelObj)
                 img.putpixel((i, j), bc)
 
-                # render new pattern based on coordinate of newPoint
     for i in range(0, len(pixelList) - 1):
         pixel = pixelList[i]
         x = 2 * center[0] - pixel[0][0]
@@ -128,51 +126,6 @@ def flipVertical(startPoint, endPoint, center, bc, img):
 
     flipVerticalImg = ImageTk.PhotoImage(img)
     return flipVerticalImg
-
-
-def shearing(pixelList, center, shear, img):
-    centerX = center[0]
-    centerY = center[1]
-
-    if shear[0] != 0:  # shearing x axis
-        #     for i in range(0, len(pixelList) - 1):
-        #       pixel = pixelList[i]
-        # #      deltaX = pixel[0][0] - centerX
-        #       deltaY = pixel[0][1] - centerY
-
-        #       x = int(round(pixel[0][0] + 0.5 * deltaY))
-        #       y = pixel[0][1]
-
-        print('go x axis')
-        for i in range(0, len(pixelList) - 1):
-            pixel = pixelList[i]
-            x = int(round((pixel[0][0]) + (pixel[0][1]) * (0.95)))
-            y = int(round((pixel[0][1])))
-
-        img.putpixel((x, y), pixel[1])
-
-    else:  # shearing y axis
-        # for i in range(0, len(pixelList) - 1):
-        #   pixel = pixelList[i]
-        #   deltaX = pixel[0][0] - centerX
-        #   deltaY = pixel[0][1] - centerY
-
-        #   x = pixel[0][0]
-        #   y = centerY + deltaY + shear[1] * deltaX
-
-        #   img.putpixel((x, y), pixel[1])
-
-        print('go y axis')
-        for i in range(0, len(pixelList) - 1):
-            pixel = pixelList[i]
-            x = int(round((pixel[0][0]) + (pixel[0][1]) * (0.95)))
-            y = int(round((pixel[0][1])))
-
-        img.putpixel((x, y), pixel[1])
-
-    shearImg = ImageTk.PhotoImage(img)
-    return shearImg
-
 
 def moveRotation(pixelList, center, alpha, bc, img):
     for i in range(0, len(pixelList) - 1):
@@ -337,14 +290,6 @@ def triangle(startPoint, endPoint, color, img, width):
     draw.line(points, color, width)
     smooth_corners(points, draw, width, color)
 
-    # triangle = np.array([A, B, C], np.int32)
-    # numpy_image = np.array(img)
-    # opencv_image = cv2.cvtColor(numpy_image, cv2.COLOR_RGB2BGR)
-    # cv2.polylines(opencv_image, [triangle], True, color[::-1], width)
-    # opencv_image_RGB = cv2.cvtColor(opencv_image, cv2.COLOR_BGR2RGB)
-    # im_pil = Image.fromarray(opencv_image_RGB)
-    # triangleImg = ImageTk.PhotoImage(im_pil)
-
     triangleImg = ImageTk.PhotoImage(img)
     return triangleImg
 
@@ -358,8 +303,10 @@ def triangleSquare(startPoint, endPoint, color, img, defaultState, width):
     draw = ImageDraw.Draw(img)
 
     draw.line(points, color, width)
+
     smooth_corners(points, draw, width, color)
     triangleSquareImg = ImageTk.PhotoImage(img)
+
 
     return triangleSquareImg
 

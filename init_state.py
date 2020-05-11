@@ -15,24 +15,32 @@ def configureFrame(self, master):
     self.width = 3
     self.master = master
     self.frame = tkinter.Frame(self.master)
-    self.figures=[]
-
+    self.figures = [ImageTk.PhotoImage(Image.new("RGB", (self.paperWidth, self.paperHeight), self.bgColor))]
+    self.layers = [Image.new("RGB", (self.paperWidth, self.paperHeight), self.bgColor)]
+    self.master.bind('<Control-z>', self.callRedo)
+    self.master.bind('<Control-n>', self.callNegative)
+    self.master.bind('<Control-b>', self.callBlur)
+    self.master.bind('<Control-t>', self.callContour)
 
 def initFrame(self):
     self.master.title("Paint")
 
-    # create Canvas component
     self.active_button = self.pencilBtn
     self.color_button = self.redBtn
-    self.myCanvas = tkinter.Canvas(self.master)
-    self.myCanvas.pack(expand=YES, fill=BOTH)
+    self.myCanvas = tkinter.Canvas(self.master, height=self.paperHeight, width=self.paperWidth, bg="white")
+    self.myCanvas.pack(expand=True, fill=BOTH)
+    self.frame.pack(expand=YES, fill=BOTH)
 
-    self.img = Image.new("RGB", [self.paperWidth, self.paperHeight], self.bgColor)
-    # circle = Image.open('./circle.png').resize((100, 100),Image.ANTIALIAS)
-
-    self.myCanvas.img = ImageTk.PhotoImage(self.img)
-    self.myCanvas.create_image(0, 0, image=self.myCanvas.img)
-    #  self.myCanvas.configure(scrollregion=(0, 0, 500, 500))
+    self.myCanvas.configure(scrollregion=(0, 0, 400, 400))
+    hbar = Scrollbar(self.frame, orient=HORIZONTAL)
+    hbar.pack(side=BOTTOM, fill=X)
+    hbar.config(command=self.myCanvas.xview)
+    vbar = Scrollbar(self.frame, orient=VERTICAL)
+    vbar.pack(side=RIGHT, fill=Y)
+    vbar.config(command=self.myCanvas.yview)
+    self.myCanvas.config(width=500, height=500)
+    self.myCanvas.config(xscrollcommand=hbar.set, yscrollcommand=vbar.set)
+    self.myCanvas.pack(side=LEFT, expand=True, fill=BOTH)
 
 
 def createIconImage(self, img, useImg, iconPath, size):
@@ -58,7 +66,6 @@ def initIconToolbar(self):
 
     createIconImage(self, 'moveTool', 'useMoveTool', moveIconPic, (30, 30))
     createIconImage(self, 'rotateTool', 'useRotateTool', rotateIconPic, (30, 30))
-    createIconImage(self, 'shearTool', 'useShearTool', shearIconPic, (30, 30))
     createIconImage(self, 'scaleTool', 'useScaleTool', scaleIconPic, (30, 30))
     createIconImage(self, 'flipVerticalTool', 'useFlipVerticalTool', flipVerticalIconPic, (30, 30))
     createIconImage(self, 'flipHorizontalTool', 'useFlipHorizontalTool', flipHorizontalIconPic, (30, 30))
@@ -138,14 +145,13 @@ def initDrawToolbar(self):
     iv = IntVar()
     L1 = Label(text="Line width:")
     L1.pack()
-    iv.trace('w', lambda name, index, mode, iv=iv: change_width(self,iv))
+    iv.trace('w', lambda name, index, mode, iv=iv: change_width(self, iv))
     E1 = Entry(textvariable=iv, bd=5, width=3, )
     iv.set(1)
     E1.pack()
 
     createIconLayout(self, self.drawToolbar, self.useMoveTool, 'moveToolBtn', self.transitionTool)
     createIconLayout(self, self.drawToolbar, self.useRotateTool, 'rotateToolBtn', self.rotationTool)
-    #  createIconLayout(self, self.drawToolbar, self.useShearTool, 'shearToolBtn', self.shearingTool)
     createIconLayout(self, self.drawToolbar, self.useScaleTool, 'scaleToolBtn', self.scalingTool)
     createIconLayout(self, self.drawToolbar, self.useFlipVerticalTool, 'flipVeticalToolBtn', self.flippingVerticalTool)
     createIconLayout(self, self.drawToolbar, self.useFlipHorizontalTool, 'flipHorizonToolBtn',

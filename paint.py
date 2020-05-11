@@ -1,12 +1,11 @@
 from tkinter import filedialog
-from tkinter import ttk
 from tkinter import *
 import math
 import copy
 import draw_pattern as draw
 import init_state as init
 from config import *
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk, ImageOps, ImageFilter
 
 
 class App(dict):
@@ -57,15 +56,25 @@ class App(dict):
             return
 
         fname = filedialog.asksaveasfilename(defaultextension=".png")
-        if not fname:  # asksaveasfile return `None` if dialog closed with "cancel".
+        if not fname:
             return
         self.paper.save(fname)
 
     def callSaveAsImage(self):
         fname = filedialog.asksaveasfilename(defaultextension=".png")
-        if not fname:  # asksaveasfile return `None` if dialog closed with "cancel".
+        if not fname:
             return
         self.paper.save(fname)
+
+    def callRedo(self, event):
+        if len(self.figures) > 1:
+            self.figures.pop()
+            self.layers.pop()
+
+        self.paper = self.layers[-1]
+        self.usePaper = self.figures[-1]
+        self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.figures[-1])
+        self.myCanvas.itemconfig(self.image_on_canvas, image=self.paper)
 
     def onChangeColor(self, colorName, colorNameButton):
         self.color_button.config(relief=RAISED)
@@ -73,11 +82,7 @@ class App(dict):
         self.color_button.config(relief=SUNKEN)
         self.chooseColor = colorName
 
-    def callback(self):
-        print("A button was pressed")
-
     def flippingHorizontalTool(self):
-        print("Flip horizontal tool")
         self.active_button.config(relief=RAISED)
         self.active_button = self.flipHorizonToolBtn
         self.active_button.config(relief=SUNKEN)
@@ -88,7 +93,6 @@ class App(dict):
         self.master.bind("<Shift_L>", lambda event: self.onChangeDefaultState())
 
     def flippingVerticalTool(self):
-        print("Flip vertical tool")
         self.active_button.config(relief=RAISED)
         self.active_button = self.flipVeticalToolBtn
         self.active_button.config(relief=SUNKEN)
@@ -99,7 +103,6 @@ class App(dict):
         self.master.bind("<Shift_L>", lambda event: self.onChangeDefaultState())
 
     def rotationTool(self):
-        print("Rotate tool")
         self.active_button.config(relief=RAISED)
         self.active_button = self.rotateToolBtn
         self.active_button.config(relief=SUNKEN)
@@ -119,15 +122,7 @@ class App(dict):
         self.myCanvas.bind("<ButtonRelease-1>", self.on_button_release_choosing_place)
         self.master.bind("<Shift_L>", lambda event: self.onChangeDefaultState())
 
-    def shearingTool(self):
-        self.active_button.config(relief=RAISED)
-        self.active_button = self.shearToolBtn
-        self.active_button.config(relief=SUNKEN)
-        self.myCanvas.config(cursor="crosshair")
-        self.myCanvas.bind("<ButtonPress-1>", self.on_button_press)
-        self.myCanvas.bind("<B1-Motion>", self.on_button_choosing_place_motion)
-        self.myCanvas.bind("<ButtonRelease-1>", self.on_button_release_choosing_place_shear)
-        self.master.bind("<Shift_L>", lambda event: self.onChangeDefaultState())
+
 
     def scalingTool(self):
         self.active_button.config(relief=RAISED)
@@ -158,7 +153,6 @@ class App(dict):
         self.myCanvas.bind("<ButtonRelease-1>", self.on_button_draw_eraser)
 
     def addChosenPoint(self, event):
-        print(event.x, event.y)
         self.listChosenPoint.append((event.x, event.y))
 
     def drawLineTool(self):
@@ -330,7 +324,10 @@ class App(dict):
 
         self.diamondImg = draw.diamond((x0, y0), (x1, y1), self.chooseColor, self.paper, self.defaultState, self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.diamondImg)
+
         self.defaultState = 0
+        self.figures.append(self.diamondImg)
+        self.layers.append(self.paper)
 
     def on_button_star_four_motion(self, event):
         x0, y0 = (self.x, self.y)
@@ -349,6 +346,8 @@ class App(dict):
                                          self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.starFourImg)
         self.defaultState = 0
+        self.figures.append(self.starFourImg)
+        self.layers.append(self.paper)
 
     def on_button_star_six_motion(self, event):
         x0, y0 = (self.x, self.y)
@@ -366,6 +365,8 @@ class App(dict):
         self.starSixImg = draw.starSix((x0, y0), (x1, y1), self.chooseColor, self.paper, self.defaultState, self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.starSixImg)
         self.defaultState = 0
+        self.figures.append(self.starSixImg)
+        self.layers.append(self.paper)
 
     def on_button_polygon_five_motion(self, event):
         x0, y0 = (self.x, self.y)
@@ -385,6 +386,8 @@ class App(dict):
                                                self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.polygonFiveImg)
         self.defaultState = 0
+        self.figures.append(self.polygonFiveImg)
+        self.layers.append(self.paper)
 
     def on_button_polygon_six_motion(self, event):
         x0, y0 = (self.x, self.y)
@@ -403,6 +406,8 @@ class App(dict):
                                              self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.polygonSixImg)
         self.defaultState = 0
+        self.figures.append(self.polygonSixImg)
+        self.layers.append(self.paper)
 
     def on_button_triangle_motion(self, event):
         x0, y0 = (self.x, self.y)
@@ -419,6 +424,8 @@ class App(dict):
         self.triangleImg = draw.triangle((x0, y0), (x1, y1), self.chooseColor, self.paper, self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.triangleImg)
         self.defaultState = 0
+        self.figures.append(self.triangleImg)
+        self.layers.append(self.paper)
 
     def on_button_triangle_square_motion(self, event):
         x0, y0 = (self.x, self.y)
@@ -427,15 +434,23 @@ class App(dict):
         paper = copy.copy(self.paper)
         self.triangleSquareImg = draw.triangleSquare((x0, y0), (x1, y1), self.chooseColor, paper, self.defaultState,
                                                      self.width)
+
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.triangleSquareImg)
+
         self.defaultState = 0
 
     def on_button_release_triangle_square(self, event):
         x0, y0 = (self.x, self.y)
         x1, y1 = (event.x, event.y)
+
         self.triangleSquareImg = draw.triangleSquare((x0, y0), (x1, y1), self.chooseColor, self.paper,
                                                      self.defaultState, self.width)
+
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.triangleSquareImg)
+
+        self.figures.append(self.triangleSquareImg)
+        self.layers.append(self.paper)
+
         self.defaultState = 0
 
     def on_button_star_motion(self, event):
@@ -455,6 +470,9 @@ class App(dict):
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.starImg)
         self.defaultState = 0
 
+        self.figures.append(self.starImg)
+        self.layers.append(self.paper)
+
     def on_button_arrow_right_motion(self, event):
         x0, y0 = (self.x, self.y)
         x1, y1 = (event.x, event.y)
@@ -472,6 +490,8 @@ class App(dict):
                                              self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.arrowRightImg)
         self.defaultState = 0
+        self.figures.append(self.arrowRightImg)
+        self.layers.append(self.paper)
 
     def on_button_choosing_place_motion(self, event):
         x0, y0 = (self.x, self.y)
@@ -492,7 +512,6 @@ class App(dict):
         self.myCanvas.bind("<ButtonRelease-1>", self.on_button_release_transition)
 
     def on_button_transition_motion(self, event):
-        x0, y0 = (self.x, self.y)
         x1, y1 = (event.x, event.y)
 
         paper = copy.copy(self.paper)
@@ -505,7 +524,6 @@ class App(dict):
         self.defaultState = 0
 
     def on_button_release_transition(self, event):
-        x0, y0 = (self.x, self.y)
         x1, y1 = (event.x, event.y)
 
         if self.pixelList:
@@ -548,15 +566,7 @@ class App(dict):
         self.myCanvas.bind("<B1-Motion>", self.on_button_rotation_motion)
         self.myCanvas.bind("<ButtonRelease-1>", self.on_button_release_rotation)
 
-    def on_button_release_choosing_place_shear(self, event):
-        x0, y0 = (self.x, self.y)
-        x1, y1 = (event.x, event.y)
-        self.transitionPlace = ((x0, y0), (x1, y1))
 
-        self.myCanvas.config(cursor="crosshair")
-        self.myCanvas.bind("<ButtonPress-1>", self.on_button_press)
-        self.myCanvas.bind("<B1-Motion>", self.on_button_shear_motion)
-        self.myCanvas.bind("<ButtonRelease-1>", self.on_button_release_shear)
 
     def on_button_release_choosing_place_scale(self, event):
         x0, y0 = (self.x, self.y)
@@ -568,25 +578,7 @@ class App(dict):
         self.myCanvas.bind("<B1-Motion>", self.on_button_scale_motion)
         self.myCanvas.bind("<ButtonRelease-1>", self.on_button_release_scale)
 
-    def on_button_shear_motion(self, event):
-        x0, y0 = (self.x, self.y)
-        x1, y1 = (event.x, event.y)
 
-        paper = copy.copy(self.paper)
-
-        if x1 > y1:
-            shearX = x1 / float(x0)
-            shearY = 0
-        else:
-            shearX = 0
-            shearY = y1 / float(y0)
-
-        if not self.pixelList:
-            self.pixelList = draw.cropping(self.transitionPlace[0], self.transitionPlace[1], self.bgColor, paper)
-
-        self.shearImg = draw.shearing(self.pixelList, (x0, y0), (shearX, shearY), paper)
-        self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.shearImg)
-        self.defaultState = 0
 
     def on_button_scale_motion(self, event):
         x0, y0 = (self.x, self.y)
@@ -601,27 +593,6 @@ class App(dict):
 
         self.scaleImg = draw.scalling(self.pixelList, (x0, y0), (scaleX, scaleY), paper)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.scaleImg)
-        self.defaultState = 0
-
-    def on_button_release_shear(self, event):
-        x0, y0 = (self.x, self.y)
-        x1, y1 = (event.x, event.y)
-
-        if x1 > y1:
-            shearX = x1 / float(x0)
-            shearY = 0
-        else:
-            shearX = 0
-            shearY = y1 / float(y0)
-
-        if self.pixelList:
-            draw.eraseSelectedCropping(self.pixelList, self.bgColor, self.paper)
-
-        self.shearImg = draw.shearing(self.pixelList, (x0, y0), (shearX, shearY), self.paper)
-        self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.shearImg)
-
-        self.pixelList = None
-        self.shearingTool()
         self.defaultState = 0
 
     def on_button_release_scale(self, event):
@@ -652,8 +623,6 @@ class App(dict):
         else:
             alpha = math.pi + math.atan((y0 - y1) / float(x0 - x1))
 
-        print(alpha)
-
         if not self.pixelList:
             self.pixelList = draw.cropping(self.transitionPlace[0], self.transitionPlace[1], self.bgColor, paper)
 
@@ -682,7 +651,6 @@ class App(dict):
         self.defaultState = 0
 
     def on_button_release_flip_horizon(self, event):
-        x0, y0 = (self.x, self.y)
         x1, y1 = (event.x, event.y)
 
         self.flipImg = draw.flipHorizontal(self.transitionPlace[0], self.transitionPlace[1], (x1, y1), self.bgColor,
@@ -693,7 +661,6 @@ class App(dict):
         self.defaultState = 0
 
     def on_button_release_flip_vertical(self, event):
-        x0, y0 = (self.x, self.y)
         x1, y1 = (event.x, event.y)
 
         self.flipImg = draw.flipVertical(self.transitionPlace[0], self.transitionPlace[1], (x1, y1), self.bgColor,
@@ -782,18 +749,24 @@ class App(dict):
         x1, y1 = (event.x, event.y)
 
         paper = copy.copy(self.paper)
-        # self.lineImg = draw.lineDDA(draw.Point(x0, y0), draw.Point(x1, y1), self.chooseColor, paper, self.defaultState)
         self.lineImg = draw.line(draw.Point(x0, y0), draw.Point(x1, y1), self.chooseColor, paper, self.defaultState,
                                  self.width)
         self.myCanvas.create_image(self.paperWidth / 2, self.paperHeight / 2, image=self.lineImg)
         self.defaultState = 0
 
+    def callNegative(self, event):
+        self.paper = ImageOps.invert(self.paper)
+
+    def callBlur(self, event):
+        self.paper = self.paper.filter(ImageFilter.BLUR)
+
+    def callContour(self, event):
+        self.paper = self.paper.filter(ImageFilter.CONTOUR)
+
     def on_button_release(self, event):
         x0, y0 = (self.x, self.y)
         x1, y1 = (event.x, event.y)
 
-        # self.lineImg = draw.lineDDA(draw.Point(x0, y0), draw.Point(x1, y1), self.chooseColor, self.paper,
-        #                             self.defaultState)
         self.lineImg = draw.line(draw.Point(x0, y0), draw.Point(x1, y1), self.chooseColor, self.paper,
                                  self.defaultState,
                                  self.width)
@@ -808,10 +781,6 @@ class App(dict):
 
 
 root = Tk()
-root.geometry("640x480")
-root.style = ttk.Style()
-# ('clam', 'alt', 'default', 'classic')
-root.style.theme_use('clam')
-
+root.geometry("1000x1000+300+300")
 app = App(root)
 root.mainloop()
